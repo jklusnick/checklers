@@ -11,8 +11,20 @@ is_running = True
 
 start_game = True
 
-boardData = [[0 for j in range(0, 8)] for i in range(0, 8)]
+boardData = [[0, 1, 0, 1, 0, 1, 0, 1], 
+			 [1, 0, 1, 0, 1, 0, 1, 0], 
+			 [0, 1, 0, 1, 0, 1, 0, 1], 
+			 [0, 0, 0, 0, 0, 0, 0, 0], 
+			 [0, 0, 0, 0, 0, 0, 0, 0], 
+			 [2, 0, 2, 0, 2, 0, 2, 0], 
+			 [0, 2, 0, 2, 0, 2, 0, 2], 
+			 [2, 0, 2, 0, 2, 0, 2, 0]]
 pos = (0,0)
+piece = {
+	"empty":0,
+	"white":1,
+	"black":2
+}
 
 while is_running:
 	for event in pygame.event.get():
@@ -50,14 +62,19 @@ while is_running:
 					else:
 						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))
 
-		for x in range(xOffset+150, xOffset+950, 200):
+		for i in range(0, len(boardData)):
+			#piece = boardData[i]
+			if boardData[i] == 1:
+				pygame.draw.circle(SCREEN, (225, 225, 225), (x*100, y*100), 45)
+
+		'''for x in range(xOffset+150, xOffset+950, 200):
 			pygame.draw.circle(SCREEN, (225, 225, 225), (x, 130), 45)
 			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 730), 45)
 			pygame.draw.circle(SCREEN, (225, 225, 225), (x, 330), 45)
 		for x in range(xOffset+50, xOffset+850, 200):
 			pygame.draw.circle(SCREEN, (225, 225, 225), (x, 230), 45)
 			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 630), 45)
-			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 830), 45)
+			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 830), 45)'''
 
 	pygame.display.update()
 
@@ -66,4 +83,3 @@ while is_running:
 
 
 pygame.quit()
-
