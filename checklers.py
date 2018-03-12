@@ -26,6 +26,7 @@ piece = {
 	"black":2
 }
 
+coord = [0, 0]
 while is_running:
 	for event in pygame.event.get():
 
@@ -37,8 +38,10 @@ while is_running:
 			is_running = False
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			pos = pygame.mouse.get_pos()
-			coord = ((pos[0]-50)/100, (pos[1]+20)/100)
-			print coord				
+			coord[0] = (pos[0]-50)/100
+			coord[1] = (pos[1]+20)/100
+			print coord	
+
 
 	SCREEN.fill ((1, 1, 101))
 
@@ -62,19 +65,13 @@ while is_running:
 					else:
 						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))
 
-		for i in range(0, len(boardData)):
-			#piece = boardData[i]
-			if boardData[i] == 1:
-				pygame.draw.circle(SCREEN, (225, 225, 225), (x*100, y*100), 45)
+		
+				if n == 1:
+					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)
+				if n == 2:
+					pygame.draw.circle(SCREEN, (25, 25, 25), (x*100+xOffset+50, y*100+yOffset+50), 45)
 
-		'''for x in range(xOffset+150, xOffset+950, 200):
-			pygame.draw.circle(SCREEN, (225, 225, 225), (x, 130), 45)
-			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 730), 45)
-			pygame.draw.circle(SCREEN, (225, 225, 225), (x, 330), 45)
-		for x in range(xOffset+50, xOffset+850, 200):
-			pygame.draw.circle(SCREEN, (225, 225, 225), (x, 230), 45)
-			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 630), 45)
-			pygame.draw.circle(SCREEN, (50, 50, 50), (x, 830), 45)'''
+		pygame.draw.circle(SCREEN, (176, 224, 255), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50),46)
 
 	pygame.display.update()
 
