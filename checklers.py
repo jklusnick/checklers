@@ -26,7 +26,7 @@ piece = {
 	"black":2
 }
 
-coord = [0, 0]
+coord = [0, -1]
 while is_running:
 	for event in pygame.event.get():
 
@@ -47,6 +47,7 @@ while is_running:
 
 	xOffset = 150
 	yOffset = 80
+	black_tile = False
 	
 	if start_game:
 		for y in range(0, len(boardData)):
@@ -55,23 +56,33 @@ while is_running:
 
 				if y%2==0:
 					if x%2==0:
-						pygame.draw.rect(SCREEN, (200, 30, 30), (x*100+xOffset, y*100+yOffset, 100, 100))
+						pygame.draw.rect(SCREEN, (200, 30, 30), (x*100+xOffset, y*100+yOffset, 100, 100))					#draw red squares, even rows
+						black_tile = False
 					else:
-						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))
+						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))						#draw black squares, even rows
+						black_tile = True
 
 				if y%2==1:
 					if x%2==1:
-						pygame.draw.rect(SCREEN, (200, 30, 30), (x*100+xOffset, y*100+yOffset, 100, 100))
+						pygame.draw.rect(SCREEN, (200, 30, 30), (x*100+xOffset, y*100+yOffset, 100, 100))					#draw red squares, odd rows
+						black_tile = False
 					else:
-						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))
-
+						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))						#draw black squares, odd rows
+						black_tile = True
 		
 				if n == 1:
-					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)
+					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)					#draw white pieces
 				if n == 2:
-					pygame.draw.circle(SCREEN, (25, 25, 25), (x*100+xOffset+50, y*100+yOffset+50), 45)
+					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)						#draw black pieces
 
-		pygame.draw.circle(SCREEN, (176, 224, 255), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50),46)
+				if n == 1 and coord[0] - 1 == x and coord[1] - 1 == y:
+					pygame.draw.circle(SCREEN, (160, 210, 255), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
+				if n == 2 and coord[0] - 1 == x and coord[1] - 1 == y:
+					pygame.draw.circle(SCREEN, (150, 40, 60), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
+				elif n == 0 and coord[0] - 1 == x and coord[1] - 1 == y and black_tile == True:
+					pygame.draw.circle(SCREEN, (160, 210, 255), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50), 45)		#draw empty space highlight
+
+				if 
 
 	pygame.display.update()
 
