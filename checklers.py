@@ -7,6 +7,12 @@ CLOCK = pygame.time.Clock()
 TARGET_FPS = 30
 
 
+piece_active = False
+
+legal_move =False
+
+coord = [0, -1]
+
 is_running = True
 
 start_game = True
@@ -23,10 +29,21 @@ pos = (0,0)
 piece = {
 	"empty":0,
 	"white":1,
-	"black":2
-}
+	"red":2
+}	
 
-coord = [0, -1]
+def check_square():
+	for y in range(0, len(boardData)):
+		for x in range(0, len(boardData[y])):
+			n=boardData[y][x]
+
+			if piece["empty"] == n and coord[0] - 1 == x and coord[1] - 1 == y:
+				print "empty"
+			if piece["white"] == n and coord[0] - 1 == x and coord[1] - 1 == y:
+				print "white"
+			if piece["red"] == n and coord[0] - 1 == x and coord[1] - 1 == y:
+				print "red"
+
 while is_running:
 	for event in pygame.event.get():
 
@@ -41,6 +58,7 @@ while is_running:
 			coord[0] = (pos[0]-50)/100
 			coord[1] = (pos[1]+20)/100
 			print coord	
+			check_square()
 
 
 	SCREEN.fill ((1, 1, 101))
@@ -81,8 +99,6 @@ while is_running:
 					pygame.draw.circle(SCREEN, (150, 40, 60), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
 				elif n == 0 and coord[0] - 1 == x and coord[1] - 1 == y and black_tile == True:
 					pygame.draw.circle(SCREEN, (160, 210, 255), (coord[0]*100+xOffset-50, coord[1]*100+yOffset-50), 45)		#draw empty space highlight
-
-				if 
 
 	pygame.display.update()
 
