@@ -61,28 +61,34 @@ while is_running:
 		if event.type == pygame.QUIT:
 			is_running = False
 
-		if event.type == pygame.MOUSEBUTTONDOWN and piece_active == True:
-			pos = pygame.mouse.get_pos()
-			dcoord[0] = (pos[0]-50)/100
-			dcoord[1] = (pos[1]+20)/100
-			check_square()
-			if dvacant == True:
-				print "move"
-			if dvacant == False:
-				print "cant do that"
-			if pvacant == False:
-				piece_active = False
-		if event.type == pygame.MOUSEBUTTONDOWN and piece_active == False:
-			pos = pygame.mouse.get_pos()
-			pcoord[0] = (pos[0]-50)/100
-			pcoord[1] = (pos[1]+20)/100	
-			check_square()
-			if pvacant == False:
-				piece_active = True
-				print "occupado"
-			if pvacant == True:
-				pass
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			if piece_active:
+				pos = pygame.mouse.get_pos()
+				dcoord[0] = (pos[0]-50)/100
+				dcoord[1] = (pos[1]+20)/100
+				check_square()
+				if dvacant == True and event.button == 1:														#destination is vacant
+					print "valid"
+					print "piece_active is " + str(piece_active)
+				if dvacant == False and event.button == 1:													#destination is not vacant
+					print "invalid"
+					print "piece_active is " + str(piece_active)
+				if event.button == 2:
+					piece_active = False
+					print "piece_active is " + str(piece_active)
 
+			else:
+				pos = pygame.mouse.get_pos()
+				pcoord[0] = (pos[0]-50)/100
+				pcoord[1] = (pos[1]+20)/100	
+				check_square()
+				if pvacant == True:														#location is vacant
+					print "empty"
+					print "piece_active is " + str(piece_active)
+				if pvacant == False:													#location is not vacant
+					print "peice selected"
+					piece_active = True
+					print "piece_active is " + str(piece_active)	
 
 
 
@@ -118,9 +124,9 @@ while is_running:
 				if n == 2:
 					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)						#draw black pieces
 
-				if n == 1 and pcoord[0] - 1 == x and pcoord[1] - 1 == y:
+				if n == 1 and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
 					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
-				if n == 2 and pcoord[0] - 1 == x and pcoord[1] - 1 == y:
+				if n == 2 and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
 					pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
 				elif n == 0 and pcoord[0] - 1 == x and pcoord[1] - 1 == y and black_tile == True:
 					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 45)		#draw empty space highlight
