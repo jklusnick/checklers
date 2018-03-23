@@ -36,7 +36,9 @@ pos = (0,0)
 piece = {
 	"empty":0,
 	"white":1,
-	"red":2
+	"red":2,
+	"wking":3,
+	"rking":4
 }	
 
 def check_square():
@@ -63,10 +65,20 @@ def rules():
 			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
 			 and dcoord[1] - pcoord[1] == 1 and dvacant == True:
 				legal_move = True
+			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
+			 and dcoord[1] - pcoord[1] == 1 and dvacant == True and dcoord[1] == 7:
+			 	boardData[dcoord[1]-1][dcoord[0]-1] = piece["wking"]
 
 			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
 			 and dcoord[1] - pcoord[1] == -1 and dvacant == True:
 				legal_move = True
+			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
+			 and dcoord[1] - pcoord[1] == -1 and dvacant == True and dcoord[1] == 0:
+			 	boardData[dcoord[1]-1][dcoord[0]-1] = piece["rking"]
+
+			if (piece["wking"] == n or piece["rking"] == n) and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
+			 and (dcoord[1] - pcoord[1] == 1 or dcoord[1] - pcoord[1] == -1) and dvacant == True:
+			 	legal_move = True	
 
 def jump():
 	global legal_jump
@@ -78,10 +90,16 @@ def jump():
 			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
 			 and dcoord[1] - pcoord[1] == 2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["red"]:
 				legal_jump = True 
+			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
+			 and dcoord[1] - pcoord[1] == 2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["red"] and dcoord[1] == 7:
+				 boardData[dcoord[1]-1][dcoord[0]-1] = piece["wking"]
 
 			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
 			 and dcoord[1] - pcoord[1] == -2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"]:
 				legal_jump = True
+			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
+			 and dcoord[1] - pcoord[1] == 2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"] and dcoord[1] == 0:
+				 boardData[dcoord[1]-1][dcoord[0]-1] = piece["rking"]
 
 
 while is_running:
@@ -158,17 +176,21 @@ while is_running:
 						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))						#draw black squares, odd rows
 						black_tile = True
 		
-				if n == 1:
+				if piece["white"] == n:
 					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)					#draw white pieces
-				if n == 2:
+				if piece["red"] == n:
 					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)						#draw black pieces
 
-				if n == 1 and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
+				if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
 					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
-				if n == 2 and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
+				if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
 					pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
-#				elif n == 0 and pcoord[0] - 1 == x and pcoord[1] - 1 == y and black_tile == True:
-#					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 45)		#draw empty space highlight
+				if piece["wking"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
+					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)
+					pygame.draw.circle(SCREEN, (255, 215, 0), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 20, 5)
+				if piece["rking"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
+					pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)
+					pygame.draw.circle(SCREEN, (255, 215, 0), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 20, 5)
 
 	pygame.display.update()
 
