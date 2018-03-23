@@ -13,7 +13,8 @@ dvacant = False
 
 piece_active = False
 
-legal_move =False
+legal_move = False
+legal_jump = False
 
 pcoord = [0, -1]
 dcoord = [0, 0]
@@ -22,14 +23,15 @@ is_running = True
 
 start_game = True
 
-boardData = [[0, 1, 0, 1, 0, 1, 0, 1], 
-			 [1, 0, 1, 0, 1, 0, 1, 0], 
-			 [0, 1, 0, 1, 0, 1, 0, 1], 
-			 [0, 0, 0, 0, 0, 0, 0, 0], 
-			 [0, 0, 0, 0, 0, 0, 0, 0], 
-			 [2, 0, 2, 0, 2, 0, 2, 0], 
-			 [0, 2, 0, 2, 0, 2, 0, 2], 
-			 [2, 0, 2, 0, 2, 0, 2, 0]]
+boardData = [[0, 1, 0, 1, 0, 1, 0, 1], #0
+			 [1, 0, 1, 0, 1, 0, 1, 0], #1
+			 [0, 1, 0, 1, 0, 1, 0, 1], #2
+			 [0, 0, 0, 0, 0, 0, 0, 0], #3
+			 [0, 0, 0, 0, 0, 0, 0, 0], #4
+			 [2, 0, 2, 0, 2, 0, 2, 0], #5
+			 [0, 2, 0, 2, 0, 2, 0, 2], #6
+			 [2, 0, 2, 0, 2, 0, 2, 0]] #7
+			 #0  1  2  3  4  5  6  7
 pos = (0,0)
 piece = {
 	"empty":0,
@@ -51,15 +53,31 @@ def check_square():
 			if piece["empty"] == n and dcoord[0] - 1 == x and dcoord[1] - 1 == y:
 				dvacant = True
 
-def whiterules():
+def rules():
 	global legal_move
 	legal_move = False
 	for y in range(0, len(boardData)):
 		for x in range(0, len(boardData[y])):
 			n=boardData[y][x]
 
-			if (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1) and dcoord[1] - pcoord[1] == 1:
+			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1) and dcoord[1] - pcoord[1] == 1 and dvacant == True:
 				legal_move = True
+
+			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1) and dcoord[1] - pcoord[1] == -1 and dvacant == True:
+				legal_move = True
+
+def jump():
+	global legal_jump
+	legal_jump = False
+	for y in range(0, len(boardData)):
+		for x in range(0, len(boardData[y])):
+			n=boardData[y][x]
+
+			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2) and dcoord[1] - pcoord[1] == 2 and legal_move == False:
+				legal_jump = True 
+
+			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2) and dcoord[1] - pcoord[1] == -2 and legal_move == False:
+				legal_jump = True
 
 
 while is_running:
@@ -78,13 +96,23 @@ while is_running:
 				dcoord[0] = (pos[0]-50)/100
 				dcoord[1] = (pos[1]+20)/100
 				check_square()
-				if dvacant == True and event.button == 1:													#destination is vacant
+				rules()
+				jump()
+				if legal_move == True and event.button == 1:												#destination is vacant
+					temp = boardData[pcoord[1]-1][pcoord[0]-1]				#value of piece stored
+					boardData[pcoord[1]-1][pcoord[0]-1] = piece["empty"]	#old space emptied
+					boardData[dcoord[1]-1][dcoord[0]-1] = temp				#new space filled with proper piece
+					piece_active = False
+					legal_move = False
+				if legal_move == False and legal_jump == False and event.button == 1:						#destination is not vacant
+					print "Illegal move"
+				if legal_jump == True and event.button == 1:
 					temp = boardData[pcoord[1]-1][pcoord[0]-1]
 					boardData[pcoord[1]-1][pcoord[0]-1] = piece["empty"]
 					boardData[dcoord[1]-1][dcoord[0]-1] = temp
+					boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] = piece["empty"]
 					piece_active = False
-				if dvacant == False and event.button == 1:													#destination is not vacant
-					print "Illegal move"
+					legal_jump = False
 				if event.button == 3:
 					piece_active = False
 
