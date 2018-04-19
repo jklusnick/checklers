@@ -202,12 +202,7 @@ while is_running:
 					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
 				if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
 					pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
-				if piece["wking"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
-					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)
-					pygame.draw.circle(SCREEN, (255, 215, 0), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 20, 5)
-				if piece["rking"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
-					pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)
-					pygame.draw.circle(SCREEN, (255, 215, 0), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 20, 5)
+
 
 	pygame.display.update()
 
