@@ -22,6 +22,9 @@ dcoord = [0, 0]
 white_turn = False
 red_turn = True
 
+white_points = 0
+red_points = 0
+
 is_running = True
 
 start_game = True
@@ -72,26 +75,19 @@ def rules():
 				legal_move = True
 				white_turn = False
 				red_turn = True
-			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
-			 and dcoord[1] - pcoord[1] == 1 and dvacant == True and dcoord[1] == 7 and white_turn == True:
-			 	boardData[dcoord[1]-1][dcoord[0]-1] = piece["wking"]
-			 	white_turn = False
-			 	red_turn = True
 
 			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
 			 and dcoord[1] - pcoord[1] == -1 and dvacant == True and red_turn == True:
 				legal_move = True
 				white_turn = True
 				red_turn = False
-			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
-			 and dcoord[1] - pcoord[1] == -1 and dvacant == True and dcoord[1] == 0 and red_turn == True:
-			 	boardData[dcoord[1]-1][dcoord[0]-1] = piece["rking"]
-			 	white_turn = True
-			 	red_turn - False
 
-			if (piece["wking"] == n or piece["rking"] == n) and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 1 or dcoord[0] - pcoord[0] == -1)\
-			 and (dcoord[1] - pcoord[1] == 1 or dcoord[1] - pcoord[1] == -1) and dvacant == True:
-			 	legal_move = True	
+			if piece["red"] == n and y == 0:
+				print "red point"
+
+			if piece["white"] == n and y == 7: 
+				print "white point"
+
 
 def jump():
 	global legal_jump, white_turn, red_turn
@@ -105,18 +101,12 @@ def jump():
 				legal_jump = True
 				white_turn = False
 				red_turn = True
-			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
-			 and dcoord[1] - pcoord[1] == 2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["red"] and dcoord[1] == 7:
-				 boardData[dcoord[1]-1][dcoord[0]-1] = piece["wking"]
 
 			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
 			 and dcoord[1] - pcoord[1] == -2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"] and red_turn == True:
 				legal_jump = True
 				white_turn =True
 				red_turn = False
-			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
-			 and dcoord[1] - pcoord[1] == 2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"] and dcoord[1] == 0:
-				 boardData[dcoord[1]-1][dcoord[0]-1] = piece["rking"]
 
 
 while is_running:
