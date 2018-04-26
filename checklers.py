@@ -22,10 +22,15 @@ dcoord = [0, 0]
 white_turn = False
 red_turn = True
 
-white_points = 0
-red_points = 0
+white_point_counter = 0
+red_point_counter = 0
 
 is_running = True
+
+myfont = pygame.font.SysFont("URW Bookman L", 50)
+red_points = myfont.render("Red points: %s" % (red_point_counter), 1, (255, 255, 255))
+white_points = myfont.render("White points: %s" % (white_point_counter), 1, (255, 255, 255))	
+pygame.display.set_caption("checklers")
 
 start_game = True
 
@@ -82,11 +87,22 @@ def rules():
 				white_turn = True
 				red_turn = False
 
+def points():
+	global red_point_counter, white_point_counter
+	for y in range(0, len(boardData)):
+		for x in range(0, len(boardData[y])):
+			n=boardData[y][x]
 			if piece["red"] == n and y == 0:
-				print "red point"
+				red_point_counter += 1
+				print red_point_counter
+				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
+				red_points = ("Red points: %s" % (red_point_counter), 1, (255, 255, 255))
 
 			if piece["white"] == n and y == 7: 
-				print "white point"
+				white_point_counter += 1
+				print white_point_counter
+				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
+				white_points = ("White points: %s" % (white_point_counter), 1, (255, 255, 255))	
 
 
 def jump():
@@ -106,7 +122,7 @@ def jump():
 			 and dcoord[1] - pcoord[1] == -2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"] and red_turn == True:
 				legal_jump = True
 				white_turn =True
-				red_turn = False
+				red_turn = False		
 
 
 while is_running:
@@ -133,8 +149,9 @@ while is_running:
 					boardData[dcoord[1]-1][dcoord[0]-1] = temp				#new space filled with proper piece
 					piece_active = False
 					legal_move = False
+					points()
 				if legal_move == False and legal_jump == False and event.button == 1:						#destination is not vacant
-					print "Illegal move"
+					pass
 				if legal_jump == True and event.button == 1:
 					temp = boardData[pcoord[1]-1][pcoord[0]-1]
 					boardData[pcoord[1]-1][pcoord[0]-1] = piece["empty"]
@@ -142,6 +159,7 @@ while is_running:
 					boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] = piece["empty"]
 					piece_active = False
 					legal_jump = False
+					points()
 				if event.button == 3:
 					piece_active = False
 
@@ -166,6 +184,9 @@ while is_running:
 		for y in range(0, len(boardData)):
 			for x in range(0, len(boardData[y])):
 				n=boardData[y][x]
+
+				SCREEN.blit(red_points, (10, 10))
+				SCREEN.blit(white_points, (800, 10))
 
 				if y%2==0:
 					if x%2==0:
