@@ -28,8 +28,8 @@ red_point_counter = 0
 is_running = True
 
 myfont = pygame.font.SysFont("URW Bookman L", 50)
-red_points = myfont.render("Red points: %s" % (red_point_counter), 1, (255, 255, 255))
-white_points = myfont.render("White points: %s" % (white_point_counter), 1, (255, 255, 255))	
+red_points = myfont.render("Red points: %s" % red_point_counter, 1, (255, 255, 255))
+white_points = myfont.render("White points: %s" % white_point_counter, 1, (255, 255, 255))	
 pygame.display.set_caption("checklers")
 
 start_game = True
@@ -44,6 +44,7 @@ boardData = [[0, 1, 0, 1, 0, 1, 0, 1], #0
 			 [2, 0, 2, 0, 2, 0, 2, 0]] #7
 			 #0  1  2  3  4  5  6  7
 pos = (0,0)
+neck = []
 piece = {
 	"empty":0,
 	"white":1,
@@ -53,9 +54,8 @@ piece = {
 }	
 
 def check_square():
-	global pvacant
+	global pvacant, dvacant
 	pvacant = False
-	global dvacant
 	dvacant = False
 	for y in range(0, len(boardData)):
 		for x in range(0, len(boardData[y])):
@@ -87,8 +87,20 @@ def rules():
 				white_turn = True
 				red_turn = False
 
+def game_over():
+	global start_game
+	board_sum = 0
+	for y in range(0, len(boardData)):
+		for x in range(0, len(boardData[y])):
+			n=boardData[y][x]	
+
+			if n != 0:
+				board_sum += 1
+
+	return board_sum == 0
+
 def points():
-	global red_point_counter, white_point_counter
+	global red_point_counter, white_point_counter, red_points, white_points
 	for y in range(0, len(boardData)):
 		for x in range(0, len(boardData[y])):
 			n=boardData[y][x]
@@ -96,13 +108,31 @@ def points():
 				red_point_counter += 1
 				print red_point_counter
 				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
-				red_points = ("Red points: %s" % (red_point_counter), 1, (255, 255, 255))
+				red_points = myfont.render("Red points: %s" % red_point_counter, 1, (255, 255, 255))
+				if game_over():
+					if white_point_counter > red_point_counter:
+						print "white wins"
+					if white_point_counter < red_point_counter:
+						print "red wins"
+					if white_point_counter == red_point_counter:
+						print "tie"
+
 
 			if piece["white"] == n and y == 7: 
 				white_point_counter += 1
 				print white_point_counter
 				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
-				white_points = ("White points: %s" % (white_point_counter), 1, (255, 255, 255))	
+				white_points = myfont.render("White points: %s" % white_point_counter, 1, (255, 255, 255))	
+				if game_over():
+					if white_point_counter > red_point_counter:
+						print "white wins"
+					if white_point_counter < red_point_counter:
+						print "red wins"
+					if white_point_counter == red_point_counter:
+						print "tie"
+
+
+
 
 
 def jump():
@@ -122,7 +152,7 @@ def jump():
 			 and dcoord[1] - pcoord[1] == -2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"] and red_turn == True:
 				legal_jump = True
 				white_turn =True
-				red_turn = False		
+				red_turn = False
 
 
 while is_running:
