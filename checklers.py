@@ -43,6 +43,7 @@ boardData = [[0, 1, 0, 1, 0, 1, 0, 1], #0
 			 [0, 2, 0, 2, 0, 2, 0, 2], #6
 			 [2, 0, 2, 0, 2, 0, 2, 0]] #7
 			 #0  1  2  3  4  5  6  7
+
 pos = (0,0)
 neck = []
 piece = {
@@ -89,15 +90,18 @@ def rules():
 
 def game_over():
 	global start_game
-	board_sum = 0
+	white_won = True
+	red_won = True
 	for y in range(0, len(boardData)):
 		for x in range(0, len(boardData[y])):
 			n=boardData[y][x]	
 
-			if n != 0:
-				board_sum += 1
+			if n == piece["red"]:
+				white_won = False
+			if n == piece["white"]:
+				red_won = False
 
-	return board_sum == 0
+	return white_won or red_won
 
 def points():
 	global red_point_counter, white_point_counter, red_points, white_points
@@ -105,38 +109,24 @@ def points():
 		for x in range(0, len(boardData[y])):
 			n=boardData[y][x]
 			if piece["red"] == n and y == 0:
-				red_point_counter += 1
+				red_point_counter += 2
 				print red_point_counter
 				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
 				red_points = myfont.render("Red points: %s" % red_point_counter, 1, (255, 255, 255))
-				if game_over():
-					if white_point_counter > red_point_counter:
-						print "white wins"
-					if white_point_counter < red_point_counter:
-						print "red wins"
-					if white_point_counter == red_point_counter:
-						print "tie"
 
 
 			if piece["white"] == n and y == 7: 
-				white_point_counter += 1
+				white_point_counter += 2
 				print white_point_counter
 				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
 				white_points = myfont.render("White points: %s" % white_point_counter, 1, (255, 255, 255))	
-				if game_over():
-					if white_point_counter > red_point_counter:
-						print "white wins"
-					if white_point_counter < red_point_counter:
-						print "red wins"
-					if white_point_counter == red_point_counter:
-						print "tie"
 
 
 
 
 
 def jump():
-	global legal_jump, white_turn, red_turn
+	global legal_jump, white_turn, red_turn, white_point_counter, red_point_counter, red_points, white_points
 	legal_jump = False
 	for y in range(0, len(boardData)):
 		for x in range(0, len(boardData[y])):
@@ -145,12 +135,16 @@ def jump():
 			if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
 			 and dcoord[1] - pcoord[1] == 2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["red"] and white_turn == True:
 				legal_jump = True
+				white_point_counter += 1
+				white_points = myfont.render("White points: %s" % white_point_counter, 1, (255, 255, 255))
 				white_turn = False
 				red_turn = True
 
 			if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and (dcoord[0] - pcoord[0] == 2 or dcoord[0] - pcoord[0] == -2)\
 			 and dcoord[1] - pcoord[1] == -2 and dvacant == True and boardData[((dcoord[1]-1) + (pcoord[1]-1))/2][((dcoord[0]-1) + (pcoord[0]-1))/2] == piece["white"] and red_turn == True:
 				legal_jump = True
+				red_point_counter += 1
+				red_points = myfont.render("Red points: %s" % red_point_counter, 1, (255, 255, 255))
 				white_turn =True
 				red_turn = False
 
@@ -180,6 +174,7 @@ while is_running:
 					piece_active = False
 					legal_move = False
 					points()
+					game_over()
 				if legal_move == False and legal_jump == False and event.button == 1:						#destination is not vacant
 					pass
 				if legal_jump == True and event.button == 1:
@@ -190,8 +185,10 @@ while is_running:
 					piece_active = False
 					legal_jump = False
 					points()
+					game_over()
 				if event.button == 3:
 					piece_active = False
+
 
 			else:
 				pos = pygame.mouse.get_pos()
