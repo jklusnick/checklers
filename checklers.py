@@ -28,8 +28,12 @@ red_point_counter = 0
 is_running = True
 
 myfont = pygame.font.SysFont("URW Bookman L", 50)
+winfont = pygame.font.SysFont("URW Bookman L", 150)
 red_points = myfont.render("Red points: %s" % red_point_counter, 1, (255, 255, 255))
 white_points = myfont.render("White points: %s" % white_point_counter, 1, (255, 255, 255))	
+white_win = winfont.render("White Wins!", 1, (255, 255, 255))
+red_win = winfont.render("Red Wins!", 1, (255, 255, 255))
+tie = winfont.render("Tie!", 1, (255, 255, 255))
 pygame.display.set_caption("checklers")
 
 start_game = True
@@ -89,19 +93,19 @@ def rules():
 				red_turn = False
 
 def game_over():
-	global start_game
-	white_won = True
-	red_won = True
+	global start_game, white_only, red_only
+	white_only = True
+	red_only = True
 	for y in range(0, len(boardData)):
 		for x in range(0, len(boardData[y])):
 			n=boardData[y][x]	
 
 			if n == piece["red"]:
-				white_won = False
+				white_only = False
 			if n == piece["white"]:
-				red_won = False
+				red_only = False
 
-	return white_won or red_won
+	return white_only, red_only
 
 def points():
 	global red_point_counter, white_point_counter, red_points, white_points
@@ -110,14 +114,12 @@ def points():
 			n=boardData[y][x]
 			if piece["red"] == n and y == 0:
 				red_point_counter += 2
-				print red_point_counter
 				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
 				red_points = myfont.render("Red points: %s" % red_point_counter, 1, (255, 255, 255))
 
 
 			if piece["white"] == n and y == 7: 
 				white_point_counter += 2
-				print white_point_counter
 				boardData[dcoord[1]-1][dcoord[0]-1] = piece["empty"]
 				white_points = myfont.render("White points: %s" % white_point_counter, 1, (255, 255, 255))	
 
@@ -152,6 +154,8 @@ def jump():
 while is_running:
 	for event in pygame.event.get():
 
+		SCREEN.blit(tie, (10, 10))
+
 		if start_game:	
 			if event.type == pygame.KEYDOWN:	
 				if event.key == pygame.K_ESCAPE:
@@ -175,6 +179,15 @@ while is_running:
 					legal_move = False
 					points()
 					game_over()
+					if (white_only == True or red_only == True) and white_point_counter > red_point_counter:
+						SCREEN.blit(white_win, (100, 100))
+						print "white wins"
+					if (white_only == True or red_only == True) and white_point_counter < red_point_counter:
+						SCREEN.blit(red_win, (100, 100))
+						print "red wins"
+					if (white_only == True or red_only == True) and white_point_counter == red_point_counter:
+						SCREEN.blit(tie, (100, 100))
+						print "tie"
 				if legal_move == False and legal_jump == False and event.button == 1:						#destination is not vacant
 					pass
 				if legal_jump == True and event.button == 1:
@@ -186,6 +199,15 @@ while is_running:
 					legal_jump = False
 					points()
 					game_over()
+					if (white_only == True or red_only == True) and white_point_counter > red_point_counter:
+						SCREEN.blit(white_win, (100, 100))
+						print "white wins"
+					if (white_only == True or red_only == True) and white_point_counter < red_point_counter:
+						SCREEN.blit(red_win, (100, 100))
+						print "red wins"
+					if (white_only == True or red_only == True) and white_point_counter == red_point_counter:
+						SCREEN.blit(tie, (100, 100))
+						print "tie"
 				if event.button == 3:
 					piece_active = False
 
