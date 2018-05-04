@@ -202,19 +202,21 @@ while is_running:
 					piece_active = True	
 
 
-	SCREEN.fill ((1, 1, 101))
+	SCREEN.fill ((31, 31, 31))
 
 	xOffset = 150
 	yOffset = 80
 	black_tile = False
 	
+	borderGap = 20
+	pygame.draw.rect(SCREEN, (250, 250, 250), (xOffset - borderGap, yOffset - borderGap, 800 + 2*borderGap, 800 + borderGap*2), 0)
 	if start_game:
 		for y in range(0, len(boardData)):
 			for x in range(0, len(boardData[y])):
 				n=boardData[y][x]
 
-				SCREEN.blit(red_points, (10, 10))
-				SCREEN.blit(white_points, (800, 10))
+				SCREEN.blit(red_points, (10, 15))
+				SCREEN.blit(white_points, (812, 15))
 
 				game_over()
 
@@ -227,6 +229,7 @@ while is_running:
 				if (white_only == True or red_only == True) and white_point_counter == red_point_counter:
 						SCREEN.blit(tie, (456, 434))
 						print "tie"
+
 
 				if y%2==0:
 					if x%2==0:
@@ -244,10 +247,38 @@ while is_running:
 						pygame.draw.rect(SCREEN, (0, 0, 0), (x*100+xOffset, y*100+yOffset, 100, 100))						#draw black squares, odd rows
 						black_tile = True
 		
+
 				if piece["white"] == n:
+					star = [
+						[xOffset + x*100 + 50, 7 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 58, 32 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 81, 32 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 61.4, 45.7 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 70, 68 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 50, 54.3 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 30, 68 + y*100 + yOffset + 8], 
+						[xOffset + x*100 + 38.6, 45.7 + y*100 + yOffset + 8], 
+						[xOffset + x*100 + 18, 32 + y*100 + yOffset + 8], 
+						[xOffset + x*100 + 42, 32 + y*100 + yOffset + 8]
+					]
 					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)					#draw white pieces
+					pygame.draw.polygon(SCREEN, (200, 200, 200), star, 0)
 				if piece["red"] == n:
+					star = [
+						[xOffset + x*100 + 50, 7 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 58, 32 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 81, 32 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 61.4, 45.7 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 70, 68 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 50, 54.3 + y*100 + yOffset + 8],
+						[xOffset + x*100 + 30, 68 + y*100 + yOffset + 8], 
+						[xOffset + x*100 + 38.6, 45.7 + y*100 + yOffset + 8], 
+						[xOffset + x*100 + 18, 32 + y*100 + yOffset + 8], 
+						[xOffset + x*100 + 42, 32 + y*100 + yOffset + 8]
+					]
+
 					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)						#draw black pieces
+					pygame.draw.polygon(SCREEN, (150, 10, 10), star, 0)
 
 				if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
 					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
