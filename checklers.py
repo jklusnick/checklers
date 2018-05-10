@@ -1,4 +1,4 @@
-import pygame
+import pygame, math
 pygame.init()
 
 DIMENSIONS = (1100, 1100)
@@ -149,7 +149,7 @@ def jump():
 				white_turn =True
 				red_turn = False
 
-
+theta = 0
 while is_running:
 	for event in pygame.event.get():
 
@@ -211,9 +211,35 @@ while is_running:
 	borderGap = 20
 	pygame.draw.rect(SCREEN, (250, 250, 250), (xOffset - borderGap, yOffset - borderGap, 800 + 2*borderGap, 800 + borderGap*2), 0)
 	if start_game:
+		
 		for y in range(0, len(boardData)):
 			for x in range(0, len(boardData[y])):
 				n=boardData[y][x]
+	
+				star = [
+										[xOffset + x*100 + 50, 9 + y*100 + yOffset + 8],
+										[xOffset + x*100 + 58, 32 + y*100 + yOffset + 8],
+										[xOffset + x*100 + 81, 32 + y*100 + yOffset + 8],
+										[xOffset + x*100 + 61.4, 45.7 + y*100 + yOffset + 8],
+										[xOffset + x*100 + 70, 68 + y*100 + yOffset + 8],
+										[xOffset + x*100 + 50, 54.3 + y*100 + yOffset + 8],
+										[xOffset + x*100 + 30, 68 + y*100 + yOffset + 8], 
+										[xOffset + x*100 + 38.6, 45.7 + y*100 + yOffset + 8], 
+										[xOffset + x*100 + 18, 32 + y*100 + yOffset + 8], 
+										[xOffset + x*100 + 42, 32 + y*100 + yOffset + 8]
+						]
+
+
+				def rotate():
+					global theta, star
+					theta = theta + .1
+					for i in range(0, len(star)):
+						r = math.sqrt((star[i][0] - (xOffset + x*100 + 50))**2 + (star[i][1] - (y*100 + yOffset + 50))**2)
+						tmpTheta = math.atan2(star[i][1] - (y*100 + yOffset + 50), star[i][0] - (xOffset + x*100 + 50))
+
+						star[i][0] = r * math.cos(theta+tmpTheta) + xOffset + x * 100 + 50
+						star[i][1] = r * math.sin(theta+tmpTheta) + yOffset + y * 100 + 50
+
 
 				SCREEN.blit(red_points, (10, 15))
 				SCREEN.blit(white_points, (812, 15))
@@ -249,42 +275,24 @@ while is_running:
 		
 
 				if piece["white"] == n:
-					star = [
-						[xOffset + x*100 + 50, 7 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 58, 32 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 81, 32 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 61.4, 45.7 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 70, 68 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 50, 54.3 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 30, 68 + y*100 + yOffset + 8], 
-						[xOffset + x*100 + 38.6, 45.7 + y*100 + yOffset + 8], 
-						[xOffset + x*100 + 18, 32 + y*100 + yOffset + 8], 
-						[xOffset + x*100 + 42, 32 + y*100 + yOffset + 8]
-					]
 					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)					#draw white pieces
 					pygame.draw.polygon(SCREEN, (200, 200, 200), star, 0)
 				if piece["red"] == n:
-					star = [
-						[xOffset + x*100 + 50, 7 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 58, 32 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 81, 32 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 61.4, 45.7 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 70, 68 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 50, 54.3 + y*100 + yOffset + 8],
-						[xOffset + x*100 + 30, 68 + y*100 + yOffset + 8], 
-						[xOffset + x*100 + 38.6, 45.7 + y*100 + yOffset + 8], 
-						[xOffset + x*100 + 18, 32 + y*100 + yOffset + 8], 
-						[xOffset + x*100 + 42, 32 + y*100 + yOffset + 8]
-					]
-
 					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)						#draw black pieces
 					pygame.draw.polygon(SCREEN, (150, 10, 10), star, 0)
 
 				if piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
-					pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
-				if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
-					pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
+					pygame.draw.circle(SCREEN, (225, 225, 225), (x*100+xOffset+50, y*100+yOffset+50), 45)	
+					#pygame.draw.circle(SCREEN, (160, 210, 255), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw white piece outline
+					rotate()
+					pygame.draw.polygon(SCREEN, (200, 200, 200), star, 0)		
 
+				
+				if piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and piece_active == True:
+					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)
+					#pygame.draw.circle(SCREEN, (150, 40, 60), (pcoord[0]*100+xOffset-50, pcoord[1]*100+yOffset-50), 50, 5)	#draw red piece outline
+					rotate()
+					pygame.draw.polygon(SCREEN, (150, 10, 10), star, 0)
 
 	pygame.display.update()
 
