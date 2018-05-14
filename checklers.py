@@ -28,7 +28,10 @@ white_win = winfont.render("White Wins!", 1, (255, 255, 255))
 red_win = winfont.render("Red Wins!", 1, (255, 255, 255))
 tie = winfont.render("Tie!", 1, (255, 255, 255))
 pygame.display.set_caption("checklers")
-start_game = True
+splash_screen = pygame.image.load("Checkers-Photo-1.jpg")
+splash_screen_rect = splash_screen.get_rect()
+start_game = False
+instructions_page = False
 
 boardData = [[0, 1, 0, 1, 0, 1, 0, 1],
 			 [1, 0, 1, 0, 1, 0, 1, 0],
@@ -48,6 +51,13 @@ piece = {
 	"wking":3,
 	"rking":4
 }	
+
+button = {
+	"x": DIMENSIONS[0] - 950,
+	"y": DIMENSIONS[1] - 450,
+	"width": 300,
+	"height": 200
+}
 
 def check_square():
 	global pvacant, dvacant
@@ -185,6 +195,7 @@ while is_running:
 	black_tile = False
 	borderGap = 20
 	pygame.draw.rect(SCREEN, (250, 250, 250), (xOffset - borderGap, yOffset - borderGap, 800 + 2*borderGap, 800 + borderGap*2), 0)
+	
 	if start_game:
 		for y in range(0, len(boardData)):
 			for x in range(0, len(boardData[y])):
@@ -252,6 +263,15 @@ while is_running:
 					pygame.draw.circle(SCREEN, (200, 30, 30), (x*100+xOffset+50, y*100+yOffset+50), 45)
 					rotate()
 					pygame.draw.polygon(SCREEN, (150, 10, 10), star, 0)
+
+	else:
+
+		SCREEN.blit(splash_screen, splash_screen_rect)
+		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"], button["y"], button["width"], button["height"]))
+		pygame.draw.rect(SCREEN, (200, 200, 200), (button["x"]+20, button["y"]+20, button["width"]-40, button["height"]-40))
+
+		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"]+button["width"]+200, button["y"], button["width"], button["height"]))
+		pygame.draw.rect(SCREEN, (200, 200, 200), (button["x"]+button["width"]+220, button["y"]+20, button["width"]-40, button["height"]-40))
 
 	pygame.display.update()
 	CLOCK.tick(TARGET_FPS)
