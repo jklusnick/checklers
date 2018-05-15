@@ -29,6 +29,9 @@ red_win = winfont.render("Red Wins!", 1, (255, 255, 255))
 tie = winfont.render("Tie!", 1, (255, 255, 255))
 pygame.display.set_caption("checklers")
 splash_screen = pygame.image.load("Checkers-Photo-1.jpg")
+label1 = myfont.render("Instructions", 1, (255, 255, 255))
+label2 = myfont.render("Play", 1, (255, 255, 255))
+pygame.font.get_fonts()
 splash_screen_rect = splash_screen.get_rect()
 start_game = False
 instructions_page = False
@@ -267,11 +270,13 @@ while is_running:
 	else:
 
 		SCREEN.blit(splash_screen, splash_screen_rect)
-		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"], button["y"], button["width"], button["height"]))
-		pygame.draw.rect(SCREEN, (200, 200, 200), (button["x"]+20, button["y"]+20, button["width"]-40, button["height"]-40))
+		pygame.draw.rect(SCREEN, (50, 50, 50), (button["x"], button["y"], button["width"], button["height"]))
+		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"]+20, button["y"]+20, button["width"]-40, button["height"]-40))
+		SCREEN.blit(label1, (button["x"]+44, button["y"]+(button["height"]/2)-20))
 
-		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"]+button["width"]+200, button["y"], button["width"], button["height"]))
-		pygame.draw.rect(SCREEN, (200, 200, 200), (button["x"]+button["width"]+220, button["y"]+20, button["width"]-40, button["height"]-40))
+		pygame.draw.rect(SCREEN, (50, 50, 50), (button["x"]+button["width"]+200, button["y"], button["width"], button["height"]))
+		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"]+button["width"]+220, button["y"]+20, button["width"]-40, button["height"]-40))
+		SCREEN.blit(label2, (button["x"]+button["width"]+307, button["y"]+(button["height"]/2)-20))
 
 	pygame.display.update()
 	CLOCK.tick(TARGET_FPS)
