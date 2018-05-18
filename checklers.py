@@ -29,6 +29,7 @@ red_win = winfont.render("Red Wins!", 1, (255, 255, 255))
 tie = winfont.render("Tie!", 1, (255, 255, 255))
 pygame.display.set_caption("checklers")
 splash_screen = pygame.image.load("Checkers-Photo-1.jpg")
+instructions_screen = pygame.image.load("Instructions.jpg")
 label1 = myfont.render("Instructions", 1, (255, 255, 255))
 label2 = myfont.render("Play", 1, (255, 255, 255))
 pygame.font.get_fonts()
@@ -177,6 +178,8 @@ while is_running:
 					game_over()
 				if event.button == 3:
 					piece_active = False
+
+
 			else:
 				pos = pygame.mouse.get_pos()
 				pcoord[0] = (pos[0]-50)/100
@@ -185,12 +188,13 @@ while is_running:
 				for y in range(0, len(boardData)):
 					for x in range(0, len(boardData[y])):
 						n=boardData[y][x]
-						if pvacant == True and event.button == 1:													#location is vacant
+						if pvacant == True and event.button == 1 and start_game == True:													#location is vacant
 							pass
-						if event.button == 1 and piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and red_turn == True:													#location is not vacant
+						if event.button == 1 and piece["red"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and red_turn == True and start_game == True:													#location is not vacant
 							piece_active = True	
-						if event.button == 1 and piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and white_turn == True:
+						if event.button == 1 and piece["white"] == n and pcoord[0] - 1 == x and pcoord[1] - 1 == y and white_turn == True and start_game == True:
 							piece_active = True
+
 
 	SCREEN.fill ((31, 31, 31))
 	xOffset = 150
@@ -198,6 +202,9 @@ while is_running:
 	black_tile = False
 	borderGap = 20
 	pygame.draw.rect(SCREEN, (250, 250, 250), (xOffset - borderGap, yOffset - borderGap, 800 + 2*borderGap, 800 + borderGap*2), 0)
+		
+	if instructions_page:
+		SCREEN.blit(instructions_screen, splash_screen_rect)
 	
 	if start_game:
 		for y in range(0, len(boardData)):
@@ -277,6 +284,14 @@ while is_running:
 		pygame.draw.rect(SCREEN, (50, 50, 50), (button["x"]+button["width"]+200, button["y"], button["width"], button["height"]))
 		pygame.draw.rect(SCREEN, (100, 100, 100), (button["x"]+button["width"]+220, button["y"]+20, button["width"]-40, button["height"]-40))
 		SCREEN.blit(label2, (button["x"]+button["width"]+307, button["y"]+(button["height"]/2)-20))
+
+		pos = pygame.mouse.get_pos()
+		if event.type == pygame.MOUSEBUTTONDOWN and pos[0] >= button["x"] and pos[0] <= button["x"]+button["width"] and pos[1] >= button["y"] and pos[1] <= button["y"]+button["height"]:
+			instructions_page = True
+			print "Instructions"
+
+		if event.type == pygame.MOUSEBUTTONDOWN and pos[0] >= button["x"]+button["width"]+200 and pos[0] <= button["x"]+(2*button["width"])+200 and pos[1] >= button["y"] and pos[1] <= button["y"]+button["height"]:
+			start_game = True
 
 	pygame.display.update()
 	CLOCK.tick(TARGET_FPS)
